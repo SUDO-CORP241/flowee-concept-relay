@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -42,7 +41,7 @@ const OrderDetail = () => {
   const { toast } = useToast();
   
   const [order, setOrder] = React.useState(orders.find(o => o.id === id));
-  const store = stores.find(s => s.storeId === order?.storeId);
+  const store = stores.find(s => s.id === order?.storeId);
   const customer = users.find(u => u.id === order?.customerId);
   const driver = users.find(u => u.id === order?.driverId);
   const pickupPoint = order?.pickupPointId ? pickupPoints.find(p => p.id === order.pickupPointId) : null;

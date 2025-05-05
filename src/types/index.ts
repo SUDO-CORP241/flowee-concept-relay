@@ -48,6 +48,8 @@ export type OrderStatus =
 export type PaymentMethod = "online" | "cash" | "airtel";
 export type PaymentStatus = "pending" | "paid" | "failed";
 
+export type BadgeVariant = "default" | "destructive" | "outline" | "secondary" | "success";
+
 export type Order = {
   id: string;
   customerId: string;
