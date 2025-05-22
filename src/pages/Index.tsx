@@ -38,13 +38,13 @@ const Index = () => {
   // Customer Dashboard
   const CustomerDashboard = () => (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-2xl font-bold">Welcome back, {currentUser?.name}</h2>
+      <h2 className="text-2xl font-bold">Bienvenue, {currentUser?.name}</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Package className="mr-2" /> Recent Orders
+              <Package className="mr-2" /> Commandes récentes
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -53,25 +53,34 @@ const Index = () => {
                 {recentOrders.map(order => (
                   <div key={order.id} className="flex justify-between border-b pb-3">
                     <div>
-                      <p className="font-medium">Order #{order.id.substring(0, 5)}</p>
+                      <p className="font-medium">Commande #{order.id.substring(0, 5)}</p>
                       <p className="text-sm text-muted-foreground">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${order.total.toFixed(2)}</p>
-                      <p className="text-sm capitalize text-muted-foreground">{order.status.replace('_', ' ')}</p>
+                      <p className="font-medium">{order.total.toFixed(2)} €</p>
+                      <p className="text-sm capitalize text-muted-foreground">
+                        {order.status === 'pending' ? 'en attente' :
+                         order.status === 'confirmed' ? 'confirmée' :
+                         order.status === 'preparing' ? 'en préparation' :
+                         order.status === 'ready_for_pickup' ? 'prête pour le ramassage' :
+                         order.status === 'picked_up' ? 'ramassée' :
+                         order.status === 'in_delivery' ? 'en livraison' :
+                         order.status === 'delivered' ? 'livrée' :
+                         order.status === 'completed' ? 'terminée' : 'annulée'}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p>No recent orders</p>
+              <p>Aucune commande récente</p>
             )}
           </CardContent>
           <CardFooter>
             <Button variant="outline" className="w-full" onClick={() => navigate('/orders')}>
-              View all orders
+              Voir toutes les commandes
             </Button>
           </CardFooter>
         </Card>
@@ -79,7 +88,7 @@ const Index = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Store className="mr-2" /> Featured Stores
+              <Store className="mr-2" /> Magasins en vedette
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -97,7 +106,7 @@ const Index = () => {
           </CardContent>
           <CardFooter>
             <Button variant="outline" className="w-full" onClick={() => navigate('/stores')}>
-              Browse all stores
+              Parcourir tous les magasins
             </Button>
           </CardFooter>
         </Card>
@@ -108,13 +117,13 @@ const Index = () => {
   // Store Dashboard
   const StoreDashboard = () => (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-2xl font-bold">Store Dashboard</h2>
+      <h2 className="text-2xl font-bold">Tableau de bord du magasin</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
-              <Package className="mr-2" size={18} /> New Orders
+              <Package className="mr-2" size={18} /> Nouvelles commandes
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -125,7 +134,7 @@ const Index = () => {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
-              <Clock className="mr-2" size={18} /> Preparing
+              <Clock className="mr-2" size={18} /> En préparation
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -136,7 +145,7 @@ const Index = () => {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
-              <Truck className="mr-2" size={18} /> Ready
+              <Truck className="mr-2" size={18} /> Prêtes
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -147,8 +156,8 @@ const Index = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
-          <CardDescription>Manage your store's recent orders</CardDescription>
+          <CardTitle>Commandes récentes</CardTitle>
+          <CardDescription>Gérer les commandes récentes de votre magasin</CardDescription>
         </CardHeader>
         <CardContent>
           {recentOrders.length > 0 ? (
@@ -156,26 +165,26 @@ const Index = () => {
               {recentOrders.map(order => (
                 <div key={order.id} className="flex justify-between items-center border-b pb-3">
                   <div>
-                    <p className="font-medium">Order #{order.id.substring(0, 5)}</p>
+                    <p className="font-medium">Commande #{order.id.substring(0, 5)}</p>
                     <p className="text-sm text-muted-foreground">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="text-right">
                     <Button size="sm" onClick={() => navigate(`/orders/${order.id}`)}>
-                      Manage
+                      Gérer
                     </Button>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p>No recent orders</p>
+            <p>Aucune commande récente</p>
           )}
         </CardContent>
         <CardFooter>
           <Button variant="outline" className="w-full" onClick={() => navigate('/orders')}>
-            View all orders
+            Voir toutes les commandes
           </Button>
         </CardFooter>
       </Card>
@@ -185,13 +194,13 @@ const Index = () => {
   // Driver Dashboard
   const DriverDashboard = () => (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-2xl font-bold">Driver Dashboard</h2>
+      <h2 className="text-2xl font-bold">Tableau de bord du livreur</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Package className="mr-2" /> Orders to Pickup
+              <Package className="mr-2" /> Commandes à ramasser
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -199,20 +208,20 @@ const Index = () => {
               {userOrders.filter(o => o.status === 'ready_for_pickup').map(order => (
                 <div key={order.id} className="flex justify-between border-b pb-3">
                   <div>
-                    <p className="font-medium">Order #{order.id.substring(0, 5)}</p>
+                    <p className="font-medium">Commande #{order.id.substring(0, 5)}</p>
                     <p className="text-sm text-muted-foreground">
-                      Store: {stores.find(s => s.id === order.storeId)?.name}
+                      Magasin: {stores.find(s => s.id === order.storeId)?.name}
                     </p>
                   </div>
                   <div className="text-right">
                     <Button size="sm" onClick={() => navigate(`/orders/${order.id}`)}>
-                      View
+                      Voir
                     </Button>
                   </div>
                 </div>
               ))}
               {userOrders.filter(o => o.status === 'ready_for_pickup').length === 0 && (
-                <p>No orders ready for pickup</p>
+                <p>Aucune commande prête pour le ramassage</p>
               )}
             </div>
           </CardContent>
@@ -221,7 +230,7 @@ const Index = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Truck className="mr-2" /> Active Deliveries
+              <Truck className="mr-2" /> Livraisons actives
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -229,20 +238,20 @@ const Index = () => {
               {userOrders.filter(o => o.status === 'in_delivery').map(order => (
                 <div key={order.id} className="flex justify-between border-b pb-3">
                   <div>
-                    <p className="font-medium">Order #{order.id.substring(0, 5)}</p>
+                    <p className="font-medium">Commande #{order.id.substring(0, 5)}</p>
                     <p className="text-sm text-muted-foreground">
                       {order.deliveryAddress}
                     </p>
                   </div>
                   <div className="text-right">
                     <Button size="sm" onClick={() => navigate(`/orders/${order.id}`)}>
-                      Manage
+                      Gérer
                     </Button>
                   </div>
                 </div>
               ))}
               {userOrders.filter(o => o.status === 'in_delivery').length === 0 && (
-                <p>No active deliveries</p>
+                <p>Aucune livraison active</p>
               )}
             </div>
           </CardContent>
@@ -254,12 +263,12 @@ const Index = () => {
   // Admin Dashboard
   const AdminDashboard = () => (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-2xl font-bold">Admin Dashboard</h2>
+      <h2 className="text-2xl font-bold">Tableau de bord administrateur</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Orders</CardTitle>
+            <CardTitle className="text-lg">Commandes</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{orders.length}</p>
@@ -268,7 +277,7 @@ const Index = () => {
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Stores</CardTitle>
+            <CardTitle className="text-lg">Magasins</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{stores.length}</p>
@@ -277,7 +286,7 @@ const Index = () => {
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Active Deliveries</CardTitle>
+            <CardTitle className="text-lg">Livraisons actives</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">
@@ -288,7 +297,7 @@ const Index = () => {
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Completed Today</CardTitle>
+            <CardTitle className="text-lg">Terminées aujourd'hui</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">
@@ -300,23 +309,30 @@ const Index = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
-          <CardDescription>Monitor system-wide orders</CardDescription>
+          <CardTitle>Commandes récentes</CardTitle>
+          <CardDescription>Surveiller les commandes dans tout le système</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {orders.slice(0, 5).map(order => (
               <div key={order.id} className="flex justify-between border-b pb-3">
                 <div>
-                  <p className="font-medium">Order #{order.id.substring(0, 5)}</p>
+                  <p className="font-medium">Commande #{order.id.substring(0, 5)}</p>
                   <p className="text-sm text-muted-foreground">
                     {stores.find(s => s.id === order.storeId)?.name}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">${order.total.toFixed(2)}</p>
+                  <p className="font-medium">{order.total.toFixed(2)} €</p>
                   <p className="text-sm capitalize text-muted-foreground">
-                    {order.status.replace('_', ' ')}
+                    {order.status === 'pending' ? 'en attente' :
+                     order.status === 'confirmed' ? 'confirmée' :
+                     order.status === 'preparing' ? 'en préparation' :
+                     order.status === 'ready_for_pickup' ? 'prête pour le ramassage' :
+                     order.status === 'picked_up' ? 'ramassée' :
+                     order.status === 'in_delivery' ? 'en livraison' :
+                     order.status === 'delivered' ? 'livrée' :
+                     order.status === 'completed' ? 'terminée' : 'annulée'}
                   </p>
                 </div>
               </div>
@@ -325,7 +341,7 @@ const Index = () => {
         </CardContent>
         <CardFooter>
           <Button variant="outline" className="w-full" onClick={() => navigate('/orders')}>
-            View all orders
+            Voir toutes les commandes
           </Button>
         </CardFooter>
       </Card>
@@ -343,7 +359,7 @@ const Index = () => {
       case 'admin':
         return <AdminDashboard />;
       default:
-        return <div>Loading...</div>;
+        return <div>Chargement...</div>;
     }
   };
 

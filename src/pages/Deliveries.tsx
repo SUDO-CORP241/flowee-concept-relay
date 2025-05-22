@@ -46,7 +46,7 @@ const Deliveries = () => {
     <Layout>
       <div className="container mx-auto p-4 pb-20">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">Delivery Dashboard</h1>
+          <h1 className="text-2xl font-bold">Tableau de bord des livraisons</h1>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -54,7 +54,7 @@ const Deliveries = () => {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <Package className="mr-2" size={18} />
-                Ready for Pickup
+                Prêt pour le ramassage
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -66,7 +66,7 @@ const Deliveries = () => {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <Truck className="mr-2" size={18} />
-                In Delivery
+                En livraison
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -78,7 +78,7 @@ const Deliveries = () => {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <Calendar className="mr-2" size={18} />
-                Today's Deliveries
+                Livraisons du jour
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -94,13 +94,13 @@ const Deliveries = () => {
         <div className="space-y-6">
           {readyForPickup.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Ready for Pickup</h2>
+              <h2 className="text-xl font-semibold mb-4">Prêt pour le ramassage</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {readyForPickup.map(order => (
                   <Card key={order.id} className="overflow-hidden">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base">
-                        Order #{order.id.substring(0, 5)}
+                        Commande #{order.id.substring(0, 5)}
                       </CardTitle>
                       <p className="text-sm text-muted-foreground">
                         {new Date(order.createdAt).toLocaleString()}
@@ -109,26 +109,26 @@ const Deliveries = () => {
                     <CardContent className="pb-4">
                       <div className="space-y-3">
                         <div>
-                          <p className="text-sm font-medium">Store</p>
+                          <p className="text-sm font-medium">Magasin</p>
                           <p className="text-sm">
                             {stores.find(s => s.id === order.storeId)?.name}
                           </p>
                         </div>
                         
                         <div>
-                          <p className="text-sm font-medium">Items</p>
+                          <p className="text-sm font-medium">Articles</p>
                           <p className="text-sm">
-                            {order.items.length} item(s) • ${order.total.toFixed(2)}
+                            {order.items.length} article(s) • ${order.total.toFixed(2)}
                           </p>
                         </div>
                         
                         <div className="pt-2">
                           <Button size="sm" className="w-full" onClick={() => navigate(`/orders/${order.id}`)}>
                             {currentUser?.role === 'admin' 
-                              ? 'View Details' 
+                              ? 'Voir détails' 
                               : (order.driverId === currentUser?.id 
-                                ? 'View Delivery' 
-                                : 'Accept Pickup')}
+                                ? 'Voir livraison' 
+                                : 'Accepter le ramassage')}
                           </Button>
                         </div>
                       </div>
@@ -141,7 +141,7 @@ const Deliveries = () => {
           
           {inDelivery.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Active Deliveries</h2>
+              <h2 className="text-xl font-semibold mb-4">Livraisons actives</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {inDelivery.map(order => (
                   <Card key={order.id} className="overflow-hidden">
@@ -149,37 +149,41 @@ const Deliveries = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <CardTitle className="text-base">
-                            Order #{order.id.substring(0, 5)}
+                            Commande #{order.id.substring(0, 5)}
                           </CardTitle>
                           <p className="text-sm text-muted-foreground">
                             {new Date(order.createdAt).toLocaleString()}
                           </p>
                         </div>
-                        <Badge>In Delivery</Badge>
+                        <Badge>En livraison</Badge>
                       </div>
                     </CardHeader>
                     <CardContent className="pb-4">
                       <div className="space-y-3">
                         <div>
-                          <p className="text-sm font-medium">Delivery Address</p>
+                          <p className="text-sm font-medium">Adresse de livraison</p>
                           <p className="text-sm">
                             {order.deliveryAddress}
                           </p>
                         </div>
                         
                         <div>
-                          <p className="text-sm font-medium">Payment</p>
+                          <p className="text-sm font-medium">Paiement</p>
                           <div className="flex items-center gap-2">
-                            <p className="text-sm capitalize">{order.paymentMethod}</p>
+                            <p className="text-sm capitalize">
+                              {order.paymentMethod === 'cash' ? 'espèces' : 
+                               order.paymentMethod === 'online' ? 'en ligne' : 'airtel'}
+                            </p>
                             <Badge variant={order.paymentStatus === 'paid' ? 'success' : 'outline'} className="text-xs">
-                              {order.paymentStatus}
+                              {order.paymentStatus === 'paid' ? 'payé' : 
+                               order.paymentStatus === 'pending' ? 'en attente' : 'échec'}
                             </Badge>
                           </div>
                         </div>
                         
                         <div className="pt-2">
                           <Button size="sm" className="w-full" onClick={() => navigate(`/orders/${order.id}`)}>
-                            Manage Delivery
+                            Gérer la livraison
                           </Button>
                         </div>
                       </div>
@@ -192,9 +196,9 @@ const Deliveries = () => {
           
           {readyForPickup.length === 0 && inDelivery.length === 0 && (
             <div className="text-center py-16">
-              <h3 className="text-lg font-medium">No active deliveries</h3>
+              <h3 className="text-lg font-medium">Pas de livraisons actives</h3>
               <p className="text-muted-foreground mt-1">
-                There are no orders ready for pickup or in delivery at the moment.
+                Il n'y a aucune commande prête pour le ramassage ou en cours de livraison pour le moment.
               </p>
             </div>
           )}

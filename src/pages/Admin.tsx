@@ -51,7 +51,7 @@ const Admin = () => {
     <Layout>
       <div className="container mx-auto p-4 pb-20">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+          <h1 className="text-2xl font-bold">Tableau de bord administrateur</h1>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -59,13 +59,13 @@ const Admin = () => {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <Package className="mr-2" size={18} />
-                Total Orders
+                Commandes totales
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{totalOrders}</p>
               <p className="text-sm text-muted-foreground">
-                {completedOrders} completed
+                {completedOrders} terminées
               </p>
             </CardContent>
           </Card>
@@ -74,13 +74,13 @@ const Admin = () => {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <Truck className="mr-2" size={18} />
-                Active Orders
+                Commandes actives
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{activeOrders}</p>
               <p className="text-sm text-muted-foreground">
-                {orders.filter(o => o.status === 'in_delivery').length} in delivery
+                {orders.filter(o => o.status === 'in_delivery').length} en livraison
               </p>
             </CardContent>
           </Card>
@@ -89,13 +89,13 @@ const Admin = () => {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <Store className="mr-2" size={18} />
-                Stores
+                Magasins
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{totalStores}</p>
               <p className="text-sm text-muted-foreground">
-                {stores.filter(s => s.rating >= 4.5).length} highly rated
+                {stores.filter(s => s.rating >= 4.5).length} bien notés
               </p>
             </CardContent>
           </Card>
@@ -104,13 +104,13 @@ const Admin = () => {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <User className="mr-2" size={18} />
-                Users
+                Utilisateurs
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{users.length}</p>
               <p className="text-sm text-muted-foreground">
-                {customers.length} customers
+                {customers.length} clients
               </p>
             </CardContent>
           </Card>
@@ -118,17 +118,17 @@ const Admin = () => {
         
         <Tabs defaultValue="users" className="w-full">
           <TabsList className="w-full justify-start border-b rounded-none px-0 mb-4">
-            <TabsTrigger value="users" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">Users</TabsTrigger>
-            <TabsTrigger value="stores" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">Stores</TabsTrigger>
-            <TabsTrigger value="pickupPoints" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">Pickup Points</TabsTrigger>
+            <TabsTrigger value="users" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">Utilisateurs</TabsTrigger>
+            <TabsTrigger value="stores" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">Magasins</TabsTrigger>
+            <TabsTrigger value="pickupPoints" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">Points de retrait</TabsTrigger>
           </TabsList>
           
           <TabsContent value="users" className="mt-0">
             <Card>
               <CardHeader>
-                <CardTitle>Users</CardTitle>
+                <CardTitle>Utilisateurs</CardTitle>
                 <CardDescription>
-                  Manage all users in the system
+                  Gérer tous les utilisateurs du système
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -136,10 +136,10 @@ const Admin = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>ID</TableHead>
-                      <TableHead>Name</TableHead>
+                      <TableHead>Nom</TableHead>
                       <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Role</TableHead>
+                      <TableHead>Téléphone</TableHead>
+                      <TableHead>Rôle</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -154,11 +154,13 @@ const Admin = () => {
                         <TableCell>{user.phone}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className="capitalize">
-                            {user.role}
+                            {user.role === 'customer' ? 'client' : 
+                             user.role === 'store' ? 'magasin' : 
+                             user.role === 'driver' ? 'livreur' : 'admin'}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Button size="sm">Edit</Button>
+                          <Button size="sm">Modifier</Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -166,7 +168,7 @@ const Admin = () => {
                 </Table>
               </CardContent>
               <CardFooter>
-                <Button>Add New User</Button>
+                <Button>Ajouter un utilisateur</Button>
               </CardFooter>
             </Card>
           </TabsContent>
@@ -174,20 +176,20 @@ const Admin = () => {
           <TabsContent value="stores" className="mt-0">
             <Card>
               <CardHeader>
-                <CardTitle>Stores</CardTitle>
+                <CardTitle>Magasins</CardTitle>
                 <CardDescription>
-                  Manage all partner stores
+                  Gérer tous les magasins partenaires
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Address</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Categories</TableHead>
-                      <TableHead>Rating</TableHead>
+                      <TableHead>Nom</TableHead>
+                      <TableHead>Adresse</TableHead>
+                      <TableHead>Téléphone</TableHead>
+                      <TableHead>Catégories</TableHead>
+                      <TableHead>Note</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -201,7 +203,7 @@ const Admin = () => {
                         <TableCell>{store.rating}</TableCell>
                         <TableCell>
                           <Button size="sm" onClick={() => navigate(`/stores/${store.id}`)}>
-                            View
+                            Voir
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -210,7 +212,7 @@ const Admin = () => {
                 </Table>
               </CardContent>
               <CardFooter>
-                <Button>Add New Store</Button>
+                <Button>Ajouter un magasin</Button>
               </CardFooter>
             </Card>
           </TabsContent>
@@ -218,19 +220,19 @@ const Admin = () => {
           <TabsContent value="pickupPoints" className="mt-0">
             <Card>
               <CardHeader>
-                <CardTitle>Pickup Points</CardTitle>
+                <CardTitle>Points de retrait</CardTitle>
                 <CardDescription>
-                  Manage external partner pickup points
+                  Gérer les points de retrait partenaires externes
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Address</TableHead>
+                      <TableHead>Nom</TableHead>
+                      <TableHead>Adresse</TableHead>
                       <TableHead>Contact</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>Statut</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -244,11 +246,11 @@ const Admin = () => {
                         </TableCell>
                         <TableCell>
                           <Badge variant={point.isActive ? "success" : "secondary"}>
-                            {point.isActive ? "Active" : "Inactive"}
+                            {point.isActive ? "Actif" : "Inactif"}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Button size="sm">Edit</Button>
+                          <Button size="sm">Modifier</Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -258,7 +260,7 @@ const Admin = () => {
               <CardFooter>
                 <Button className="flex items-center gap-2">
                   <MapPin size={16} />
-                  Add Pickup Point
+                  Ajouter un point de retrait
                 </Button>
               </CardFooter>
             </Card>

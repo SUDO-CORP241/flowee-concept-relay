@@ -57,14 +57,14 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-flowee-500">Flowee</h1>
-          <p className="text-muted-foreground mt-2">NOUN CONCEPT Delivery Management</p>
+          <p className="text-muted-foreground mt-2">NOUN CONCEPT Gestion de Livraison</p>
         </div>
         
         <Card>
           <CardHeader>
-            <CardTitle>Login</CardTitle>
+            <CardTitle>Connexion</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              Entrez vos identifiants pour accéder à votre compte
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -74,14 +74,14 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your.email@example.com"
+                  placeholder="votre.email@exemple.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Mot de passe</Label>
                 <Input
                   id="password"
                   type="password"
@@ -92,37 +92,37 @@ const Login = () => {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Logging in..." : "Log in"}
+                {isLoading ? "Connexion en cours..." : "Se connecter"}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <p className="text-sm text-muted-foreground mb-4">Demo accounts:</p>
+            <p className="text-sm text-muted-foreground mb-4">Comptes de démonstration :</p>
             <Tabs defaultValue="customer">
               <TabsList className="grid grid-cols-4 w-full">
-                <TabsTrigger value="customer">Customer</TabsTrigger>
-                <TabsTrigger value="store">Store</TabsTrigger>
-                <TabsTrigger value="driver">Driver</TabsTrigger>
+                <TabsTrigger value="customer">Client</TabsTrigger>
+                <TabsTrigger value="store">Magasin</TabsTrigger>
+                <TabsTrigger value="driver">Livreur</TabsTrigger>
                 <TabsTrigger value="admin">Admin</TabsTrigger>
               </TabsList>
               <TabsContent value="customer" className="pt-2">
                 <Button variant="outline" onClick={loginAsCustomer} className="w-full">
-                  Login as Customer
+                  Connexion en tant que Client
                 </Button>
               </TabsContent>
               <TabsContent value="store" className="pt-2">
                 <Button variant="outline" onClick={loginAsStore} className="w-full">
-                  Login as Store
+                  Connexion en tant que Magasin
                 </Button>
               </TabsContent>
               <TabsContent value="driver" className="pt-2">
                 <Button variant="outline" onClick={loginAsDriver} className="w-full">
-                  Login as Driver
+                  Connexion en tant que Livreur
                 </Button>
               </TabsContent>
               <TabsContent value="admin" className="pt-2">
                 <Button variant="outline" onClick={loginAsAdmin} className="w-full">
-                  Login as Admin
+                  Connexion en tant qu'Admin
                 </Button>
               </TabsContent>
             </Tabs>
