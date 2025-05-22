@@ -18,6 +18,7 @@ export type Store = {
   email: string;
   description: string;
   image: string;
+  logoUrl?: string; // Added logoUrl as optional property
   rating: number;
   latitude: number;
   longitude: number;
