@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/contexts/UserContext';
 import { orders, stores } from '@/data/mockData';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,9 @@ import { Truck, Calendar, Package } from 'lucide-react';
 const Deliveries = () => {
   const { currentUser } = useUser();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  const [driverOrdersState, setDriverOrdersState] = useState(orders);
   
   // Redirect if not driver or admin
   React.useEffect(() => {
@@ -25,22 +29,41 @@ const Deliveries = () => {
     if (!currentUser) return [];
     
     if (currentUser.role === 'admin') {
-      return orders.filter(o => 
+      return driverOrdersState.filter(o => 
         ['ready_for_pickup', 'picked_up', 'in_delivery'].includes(o.status)
       );
     } else {
       // For drivers: orders assigned to them + orders ready for pickup that could be assigned
-      return orders.filter(o => 
+      return driverOrdersState.filter(o => 
         (o.driverId === currentUser.id) || 
         (['ready_for_pickup'].includes(o.status) && !o.driverId)
       );
     }
-  }, [currentUser]);
+  }, [currentUser, driverOrdersState]);
 
   // Split orders into categories
   const readyForPickup = driverOrders.filter(o => o.status === 'ready_for_pickup');
   const pickedUp = driverOrders.filter(o => o.status === 'picked_up');
   const inDelivery = driverOrders.filter(o => o.status === 'in_delivery');
+
+  const handleClaimOrder = (orderId: string) => {
+    if (!currentUser) return;
+    
+    // Dans une vraie application, ceci ferait un appel API
+    const updatedOrders = driverOrdersState.map(order => 
+      order.id === orderId ? { ...order, driverId: currentUser.id } : order
+    );
+    
+    setDriverOrdersState(updatedOrders);
+    
+    toast({
+      title: "Commande acceptée",
+      description: "Vous avez pris en charge cette commande",
+    });
+    
+    // Naviguer vers les détails de la commande
+    navigate(`/orders/${orderId}`);
+  };
 
   return (
     <Layout>
@@ -96,45 +119,61 @@ const Deliveries = () => {
             <div>
               <h2 className="text-xl font-semibold mb-4">Prêt pour le ramassage</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {readyForPickup.map(order => (
-                  <Card key={order.id} className="overflow-hidden">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base">
-                        Commande #{order.id.substring(0, 5)}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(order.createdAt).toLocaleString()}
-                      </p>
-                    </CardHeader>
-                    <CardContent className="pb-4">
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm font-medium">Magasin</p>
-                          <p className="text-sm">
-                            {stores.find(s => s.id === order.storeId)?.name}
-                          </p>
+                {readyForPickup.map(order => {
+                  const store = stores.find(s => s.id === order.storeId);
+                  return (
+                    <Card key={order.id} className="overflow-hidden">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-base">
+                          Commande #{order.id.substring(0, 5)}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(order.createdAt).toLocaleString()}
+                        </p>
+                      </CardHeader>
+                      <CardContent className="pb-4">
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-sm font-medium">Magasin</p>
+                            <div className="flex items-center gap-2">
+                              {store?.logoUrl && (
+                                <div className="w-6 h-6 rounded overflow-hidden">
+                                  <img src={store.logoUrl} alt={store.name} className="w-full h-full object-cover" />
+                                </div>
+                              )}
+                              <p className="text-sm">{store?.name}</p>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <p className="text-sm font-medium">Articles</p>
+                            <p className="text-sm">
+                              {order.items.length} article(s) • {order.total.toFixed(2)} €
+                            </p>
+                          </div>
+                          
+                          <div className="pt-2">
+                            <Button 
+                              size="sm" 
+                              className="w-full" 
+                              onClick={() => 
+                                order.driverId === currentUser?.id || currentUser?.role === 'admin' 
+                                  ? navigate(`/orders/${order.id}`)
+                                  : handleClaimOrder(order.id)
+                              }
+                            >
+                              {currentUser?.role === 'admin' 
+                                ? 'Voir détails' 
+                                : (order.driverId === currentUser?.id 
+                                  ? 'Voir livraison' 
+                                  : 'Accepter le ramassage')}
+                            </Button>
+                          </div>
                         </div>
-                        
-                        <div>
-                          <p className="text-sm font-medium">Articles</p>
-                          <p className="text-sm">
-                            {order.items.length} article(s) • ${order.total.toFixed(2)}
-                          </p>
-                        </div>
-                        
-                        <div className="pt-2">
-                          <Button size="sm" className="w-full" onClick={() => navigate(`/orders/${order.id}`)}>
-                            {currentUser?.role === 'admin' 
-                              ? 'Voir détails' 
-                              : (order.driverId === currentUser?.id 
-                                ? 'Voir livraison' 
-                                : 'Accepter le ramassage')}
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           )}
