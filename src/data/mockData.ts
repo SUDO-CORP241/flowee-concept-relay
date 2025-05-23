@@ -1,5 +1,5 @@
 
-import { Store, Product, Order, User, PickupPoint } from '../types';
+import { Store, Product, Order, User, PickupPoint, DeliveryPack } from '../types';
 
 // Mock Users
 export const users: User[] = [
@@ -37,6 +37,64 @@ export const users: User[] = [
   }
 ];
 
+// Delivery Packs
+export const deliveryPacks: DeliveryPack[] = [
+  {
+    id: "pack1",
+    name: "Pack Starter",
+    deliveriesCount: 50,
+    price: 25000, // 25,000 CDF
+    driverCommissionRate: 0.12, // 12% du total
+    validity: 30,
+    description: "Idéal pour débuter - 50 livraisons sur 30 jours"
+  },
+  {
+    id: "pack2",
+    name: "Pack Business",
+    deliveriesCount: 150,
+    price: 65000, // 65,000 CDF
+    driverCommissionRate: 0.15, // 15% du total
+    validity: 60,
+    description: "Pour les commerces actifs - 150 livraisons sur 60 jours"
+  },
+  {
+    id: "pack3",
+    name: "Pack Premium",
+    deliveriesCount: 300,
+    price: 120000, // 120,000 CDF
+    driverCommissionRate: 0.18, // 18% du total
+    validity: 90,
+    description: "Pour les gros volumes - 300 livraisons sur 90 jours"
+  },
+  {
+    id: "pack4",
+    name: "Pack Enterprise",
+    deliveriesCount: 500,
+    price: 180000, // 180,000 CDF
+    driverCommissionRate: 0.20, // 20% du total
+    validity: 120,
+    description: "Pour les entreprises - 500 livraisons sur 120 jours"
+  }
+];
+
+// Function to calculate delivery fee based on order total
+export const calculateDeliveryFee = (orderTotal: number): number => {
+  // Progressive fee structure:
+  // 0-10,000 CDF: 1,500 CDF
+  // 10,001-25,000 CDF: 2,000 CDF
+  // 25,001-50,000 CDF: 2,500 CDF
+  // 50,001+ CDF: 3,000 CDF
+  if (orderTotal <= 10000) return 1500;
+  if (orderTotal <= 25000) return 2000;
+  if (orderTotal <= 50000) return 2500;
+  return 3000;
+};
+
+// Function to calculate driver commission
+export const calculateDriverCommission = (orderTotal: number, commissionRate: number): number => {
+  return Math.round(orderTotal * commissionRate);
+};
+
 // Mock Stores
 export const stores: Store[] = [
   {
@@ -51,7 +109,10 @@ export const stores: Store[] = [
     rating: 4.8,
     latitude: 40.7128,
     longitude: -74.006,
-    categories: ["Bakery", "Dessert"]
+    categories: ["Bakery", "Dessert"],
+    currentPack: deliveryPacks[1], // Pack Business
+    remainingDeliveries: 89,
+    totalDeliveries: 150
   },
   {
     id: "s2",
@@ -65,7 +126,9 @@ export const stores: Store[] = [
     rating: 4.5,
     latitude: 40.7138,
     longitude: -74.016,
-    categories: ["Grocery", "Organic"]
+    categories: ["Grocery", "Organic"],
+    remainingDeliveries: 0,
+    totalDeliveries: 0
   },
   {
     id: "s3",
@@ -79,7 +142,10 @@ export const stores: Store[] = [
     rating: 4.7,
     latitude: 40.7118,
     longitude: -74.026,
-    categories: ["Produce", "Organic"]
+    categories: ["Produce", "Organic"],
+    currentPack: deliveryPacks[0], // Pack Starter
+    remainingDeliveries: 23,
+    totalDeliveries: 50
   },
   {
     id: "s4",
@@ -93,7 +159,10 @@ export const stores: Store[] = [
     rating: 4.9,
     latitude: 40.7148,
     longitude: -74.036,
-    categories: ["Coffee", "Bakery"]
+    categories: ["Coffee", "Bakery"],
+    currentPack: deliveryPacks[2], // Pack Premium
+    remainingDeliveries: 267,
+    totalDeliveries: 300
   }
 ];
 
@@ -155,7 +224,7 @@ export const products: Product[] = [
   }
 ];
 
-// Mock Orders
+// Mock Orders with updated fee structure
 export const orders: Order[] = [
   {
     id: "o1",
@@ -190,6 +259,8 @@ export const orders: Order[] = [
     paymentMethod: "airtel",
     paymentStatus: "paid",
     total: 23.95,
+    deliveryFee: calculateDeliveryFee(23.95),
+    driverCommission: calculateDriverCommission(23.95, 0.15),
     customerValidated: false,
     driverValidated: false
   },
@@ -225,6 +296,8 @@ export const orders: Order[] = [
     paymentMethod: "cash",
     paymentStatus: "pending",
     total: 11.97,
+    deliveryFee: calculateDeliveryFee(11.97),
+    driverCommission: calculateDriverCommission(11.97, 0.12),
     customerValidated: false,
     driverValidated: false
   },
@@ -253,6 +326,8 @@ export const orders: Order[] = [
     paymentMethod: "online",
     paymentStatus: "paid",
     total: 10.98,
+    deliveryFee: 0, // No delivery fee for pickup
+    driverCommission: 0,
     customerValidated: false,
     driverValidated: false
   }

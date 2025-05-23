@@ -18,11 +18,25 @@ export type Store = {
   email: string;
   description: string;
   image: string;
-  logoUrl?: string; // Added logoUrl as optional property
+  logoUrl?: string;
   rating: number;
   latitude: number;
   longitude: number;
   categories: string[];
+  // New pack system fields
+  currentPack?: DeliveryPack;
+  remainingDeliveries: number;
+  totalDeliveries: number;
+};
+
+export type DeliveryPack = {
+  id: string;
+  name: string;
+  deliveriesCount: number;
+  price: number;
+  driverCommissionRate: number; // Percentage of order total (e.g., 0.15 for 15%)
+  validity: number; // Days
+  description: string;
 };
 
 export type Product = {
@@ -68,6 +82,9 @@ export type Order = {
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
   total: number;
+  // New fee fields
+  deliveryFee: number;
+  driverCommission: number;
   customerValidated: boolean;
   driverValidated: boolean;
   notes?: string;
