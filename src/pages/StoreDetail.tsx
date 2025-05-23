@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
@@ -168,8 +167,12 @@ const StoreDetail = () => {
               alt={store.name}
               className="w-full h-full object-cover rounded-md"
               onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling!.style.display = 'flex';
+                const target = e.currentTarget;
+                target.style.display = 'none';
+                // Make sure we're checking if nextElementSibling exists before accessing it
+                if (target.nextElementSibling) {
+                  (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                }
               }}
             />
             <div className="hidden w-full h-full bg-muted rounded-md items-center justify-center">
@@ -258,8 +261,12 @@ const StoreDetail = () => {
                       alt={product.name}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling!.style.display = 'flex';
+                        const target = e.currentTarget;
+                        target.style.display = 'none';
+                        // Make sure we're checking if nextElementSibling exists before accessing it
+                        if (target.nextElementSibling) {
+                          (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                        }
                       }}
                     />
                     <div className="hidden w-full h-full bg-muted items-center justify-center">
